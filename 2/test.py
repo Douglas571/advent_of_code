@@ -24,5 +24,6 @@ class TestStringMethods(unittest.TestCase):
       hp, d = calc_course_2(commands)
       self.assertEqual(15, hp)
       self.assertEqual(60, d)
+      
 if __name__ == '__main__':
   unittest.main()
