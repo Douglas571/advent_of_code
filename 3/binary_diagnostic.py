@@ -21,36 +21,35 @@ def binary_diagnostic(report):
   return int(gamma_rate, 2), int(epsilon_rate, 2)
 
 def binary_diagnostic_2(report):
+  print()
   msr_bit_len = len(report[0])
   common_bits = [ [0, 1] for _ in range(len(report[0]))]
   ogr = '0b'
   co2sr = 'ob'
 
-  remainin_measures = []
+  remainin_measures = [ x for x in report ]
 
-  
-
-  for i in range(msr_bit_len):
-    for msr in report:
-      bit = msr[i]
-
-      if bit == '0':
-        common_bits[i][0] += 1
+  i = 0
+  while len(remainin_measures) > 1:
+    bits = [0, 0]
+    for msr in remainin_measures:
+      if msr[i] == '0':
+        bits[0] += 1
       else:
-        common_bits[i][1] += 1
+        bits[1] += 1
 
-    bit = common_bits[i]
-
-    if bit[0] > bit[1]:
-      for msr in report:
-        remainin_measures = 
-
+    if bits[1] >= bits[0]:
+      new_measures = [ msr for msr in remainin_measures if msr[i] == '1']
     else:
-      remainin_measures = [ msr for msr in report if msr[i] == '1']
+      new_measures = [ msr for msr in remainin_measures if msr[i] == '0']
 
-    print(f'{i}. {remainin_measures}') 
+    print(f'{i}. common: {bits}; {new_measures}')
+    remainin_measures = new_measures
+    i += 1
 
-  return ogr, co2sr
+  ogr = '0b' + remainin_measures[0]
+
+  return int(ogr, 2), int(co2sr, 2)
 
 def main():
   with open('input.txt') as f:
