@@ -2,7 +2,11 @@ import unittest
 from bingo import *
 
 class TestStringMethods(unittest.TestCase):
+  #@unittest.skip
   def test_one(self):
+    #print()
+    #print('---- Test 1 ----')
+    #print()
     with open('example.txt') as f:
       raw_lines = f.readlines()
       numbers, boards = extract_input(raw_lines)
@@ -35,9 +39,44 @@ class TestStringMethods(unittest.TestCase):
       self.assertEqual(exp_boards, boards)
 
       results = bingo_game(numbers, boards)
-      self.assertEqual(3, results.winner_board)
-      self.assertEqual(24, results.last_number)
-      self.assertEqual(180, results.sum_unmarket_numbs)
+      self.assertEqual(3, results["winner"])
+      self.assertEqual(24, results["last_number"])
+      self.assertEqual(188, results["sum_unmarked_numbers"])
+      self.assertEqual([14, 21, 17, 24, 4], results["completed"])
+      self.assertEqual("row 1", results["completed_a"])
+      self.assertEqual(4512, results["score"])
       
+  def test_two_col(self):
+    #print()
+    #print('---- Test 2 ----')
+    #print()
+    with open('example2.txt') as f:
+      raw_lines = f.readlines()
+      numbers, boards = extract_input(raw_lines)
+
+      res = bingo_game(numbers, boards)
+      #print('Results 1th part:')
+      #for k, v in res.items():
+        #print(f'    {k}: {v}')
+
+      self.assertEqual(res['completed'], [22, 8, 21, 6, 1])
+      self.assertEqual(res['winner'], 1)
+      self.assertEqual(res['completed_a'], 'colum 1')
+      
+  #@unittest.skip 
+  def test_three_trunkated(self):
+    #----- trunkated bingo game -----#
+    with open('example.txt') as f:
+      raw_lines = f.readlines()
+      numbers, boards = extract_input(raw_lines)
+
+      results = trunkated_bingo_game(numbers, boards)
+      self.assertEqual(2, results["winner"])
+      self.assertEqual(13, results["last_number"])
+      self.assertEqual(148, results["sum_unmarked_numbers"])
+      self.assertEqual([0, 13, 7, 10, 16], results["completed"])
+      self.assertEqual("colum 3", results["completed_a"])
+      self.assertEqual(1924, results["score"])      
+  
 if __name__ == '__main__':
   unittest.main()
