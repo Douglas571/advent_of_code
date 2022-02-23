@@ -1,7 +1,7 @@
 import unittest
 from bingo import *
 
-class TestStringMethods(unittest.TestCase):
+class Test(unittest.TestCase):
   #@unittest.skip
   def test_one(self):
     #print()

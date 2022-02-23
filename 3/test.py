@@ -1,7 +1,7 @@
 import unittest
 from binary_diagnostic import *
 
-class TestStringMethods(unittest.TestCase):
+class Test(unittest.TestCase):
   def test_one(self):
     with open('example.txt') as f:
       measures = f.readlines()
