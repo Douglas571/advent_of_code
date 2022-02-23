@@ -71,12 +71,18 @@ class TestStringMethods(unittest.TestCase):
       numbers, boards = extract_input(raw_lines)
 
       results = trunkated_bingo_game(numbers, boards)
+      last_winner = results[-1]
+
+      self.assertEqual(last_winner["board"], 2)
+      self.assertEqual(last_winner['score'], 1924)
+
+      """
       self.assertEqual(2, results["winner"])
       self.assertEqual(13, results["last_number"])
       self.assertEqual(148, results["sum_unmarked_numbers"])
       self.assertEqual([0, 13, 7, 10, 16], results["completed"])
       self.assertEqual("colum 3", results["completed_a"])
       self.assertEqual(1924, results["score"])      
-  
+      """
 if __name__ == '__main__':
   unittest.main()

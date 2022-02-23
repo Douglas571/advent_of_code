@@ -30,8 +30,7 @@ def get_unmarket_numbers(board, market_numbers):
   return unmarket_numbers
 
 def bingo_game(numbers, boards, market_numbers=None):
-  if not market_numbers:
-    market_numbers = []
+  market_numbers = market_numbers or []
 
   numbers = deque(numbers)
   result = { "winner": None }
@@ -70,29 +69,38 @@ def bingo_game(numbers, boards, market_numbers=None):
     #print(n)
   return result
 
-def trunkated_bingo_game(numbers, boards, market_numbers=[]):
-  # the board to delete: winner
-  # the last number: last_number
-  # market_numbers: number[0:last_number_index]
+def trunkated_bingo_game(numbers, boards):
+  numbers_copy = deque(numbers[:])
+  market_numbers = []
+  winners_ranking = []
+  winners = []
 
-  print(f'\n--- Trunkated Bingo ---')
-  print(f'numbers: {numbers}')
+  while len(numbers_copy) > 0:
+    n = numbers_copy.popleft()
+    market_numbers.append(n)
 
-  res = bingo_game(numbers, boards, market_numbers)
+    for i, board in enumerate(boards):
+      if i in winners: continue
 
-  p = numbers.index(res['last_number'])
-  market_numbers = numbers[0:p]
-  new_numbers = numbers[p:]
-  winner_board = boards.pop(res['winner'] - 1)
+      row, r = check_rows(board, market_numbers)
+      col, c = check_cols(board, market_numbers)
 
-  print(f'market_numbers: {market_numbers}')
-  print(f'new_numbers: {new_numbers}')
-  print(f'remainin_boards: {boards}')
+      if r or c:
+        winners.append(i)
 
-  if len(boards) == 0:
-    return res
+        unmarket_numbers = get_unmarket_numbers(board, market_numbers)
+        sum_unmarket_numbers = sum(unmarket_numbers)
 
-  trunkated_bingo_game(new_numbers, boards, market_numbers)
+        score = sum_unmarket_numbers * n
+
+        winners_ranking.append(
+          {
+            "board": i+1,
+            "score": score
+          }
+        )
+
+  return winners_ranking
 
 def extract_numbers(raw_lines):
   numbers = raw_lines[0].split(',')
@@ -129,5 +137,12 @@ def main():
     for k, v in winner.items():
       print(f'    {k}: {v}')
 
+    winners = trunkated_bingo_game(numbers, boards)
+    print('\nResults 2th part: trunkated')
+    w = winners[-1]
+    b = w['board']
+    sc = w['score']
+    print(f'the last winner is the board {b} with score of {sc}')
+    
 if __name__ == '__main__':
   main()
