@@ -5,7 +5,7 @@ class Test(unittest.TestCase):
   def test_one(self):
     with open('example.txt') as f:
       raw_data = f.readlines()
-      segments = extract_segments(raw_data)
+      segments, hx, hy = extract_segments(raw_data)
 
       self.assertEqual(len(segments), 10)
       self.assertEqual(segments[0][0], (0, 9))
@@ -17,8 +17,10 @@ class Test(unittest.TestCase):
       self.assertEqual(segments[-1][0], (5, 5))
       self.assertEqual(segments[-1][1], (8, 2))
 
-      dangerours_points = determine_lines_overlapes(segments)
+      dangerours_points = determine_lines_overlapes(segments, hx, hy)
       self.assertEqual(dangerours_points, 5)
+
+
 
 if __name__ == '__main__':
   unittest.main()

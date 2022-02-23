@@ -1,29 +1,101 @@
 def extract_segments(raw_data):
   sgms = []
+  hx = 0
+  hy = 0
   for line in raw_data:
     raw_p1, raw_p2 = line.split(' -> ')
 
     p1 = tuple(int(n) for n in raw_p1.split(','))
     p2 = tuple(int(n) for n in raw_p2.split(','))
 
+    x_max = max((p1[0], p2[0]))
+    y_max = max((p1[1], p2[1]))
+
+    if x_max > hx:
+      hx = x_max
+
+    if y_max > hy:
+      hy = y_max
+
     sgms.append((p1, p2))
 
-  return sgms
+  return sgms, hx, hy
 
-def determine_lines_overlapes(segments):
+def print_d(diagrame):
+  for row in diagrame:
+    for n in row:
+      if n == 0: 
+        print('.', end=' ')
+        continue
+      print(n, end=' ')
+    print()
+
+def count_overlapes(diagrame):
+  c = 0
+  for row in diagrame:
+    for n in row:
+      if n >= 2: c += 1
+
+  return c
+
+def determine_lines_overlapes(segments, hx, hy):
   # just in case :v
   #sgms = segments.copy()
 
-  diagrame = []
-  lines_overlas = -1
+  diagrame = [[ 0 for _ in range(hx + 1)] for _ in range(hy + 1)]
+  lines_overlaps = -1
 
-  # a sgm is a list like this: [[x1, y1], [x2, y2]]
-
+  # a sgm is a list like this: ((x1, y1), (x2, y2))
   for sgm in segments:
-    pass
+    print(sgm)    
+    p1, p2 = sgm
+    x1 = p1[0]
+    x2 = p2[0]
+    y1 = p1[1]
+    y2 = p2[1]
 
-  return lines_overlas
+    if x1 is x2:
+      start = min([y1, y2])
+      end = max([y1, y2]) + 1
+      print('vertical')
+      print(f'min:{start}')
+      print(f'max:{end}')
+      for y in range(start, end):
+        diagrame[y][x1] += 1
+      continue
 
+    if y1 is y2:
+      start = min([x1, x2])
+      end = max([x1, x2]) + 1
+      print('horizontal')
+      for x in range(start, end):
+        diagrame[y1][x] += 1
+      continue
+
+  print_d(diagrame)
+  """
+    Should print a diagram like this:
+    .......1..
+    ..1....1..
+    ..1....1..
+    .......1..
+    .112111211
+    ..........
+    ..........
+    ..........
+    ..........
+    222111....
+  """
+  lines_overlaps = count_overlapes(diagrame)
+
+  return lines_overlaps
+
+def main():
+  with open('input.txt') as f:
+    raw_data = f.readlines()
+    segments, hx, hy = extract_segments(raw_data)
+
+    dangerours_points = determine_lines_overlapes(segments, hx, hy)
 
 if __name__ == '__main__':
   main()
