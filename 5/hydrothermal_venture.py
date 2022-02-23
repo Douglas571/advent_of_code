@@ -22,6 +22,20 @@ def extract_segments(raw_data):
   return sgms, hx, hy
 
 def print_d(diagrame):
+
+  """
+    Should print a diagram like this:
+    .......1..
+    ..1....1..
+    ..1....1..
+    .......1..
+    .112111211
+    ..........
+    ..........
+    ..........
+    ..........
+    222111....
+  """
   for row in diagrame:
     for n in row:
       if n == 0: 
@@ -39,15 +53,11 @@ def count_overlapes(diagrame):
   return c
 
 def determine_lines_overlapes(segments, hx, hy):
-  # just in case :v
-  #sgms = segments.copy()
-
   diagrame = [[ 0 for _ in range(hx + 1)] for _ in range(hy + 1)]
   lines_overlaps = -1
 
   # a sgm is a list like this: ((x1, y1), (x2, y2))
   for sgm in segments:
-    print(sgm)    
     p1, p2 = sgm
     x1 = p1[0]
     x2 = p2[0]
@@ -55,37 +65,23 @@ def determine_lines_overlapes(segments, hx, hy):
     y2 = p2[1]
 
     if x1 is x2:
+      #print('vertical')
       start = min([y1, y2])
       end = max([y1, y2]) + 1
-      print('vertical')
-      print(f'min:{start}')
-      print(f'max:{end}')
+      
       for y in range(start, end):
         diagrame[y][x1] += 1
       continue
 
     if y1 is y2:
+      #print('horizontal')
       start = min([x1, x2])
       end = max([x1, x2]) + 1
-      print('horizontal')
+      
       for x in range(start, end):
         diagrame[y1][x] += 1
       continue
 
-  print_d(diagrame)
-  """
-    Should print a diagram like this:
-    .......1..
-    ..1....1..
-    ..1....1..
-    .......1..
-    .112111211
-    ..........
-    ..........
-    ..........
-    ..........
-    222111....
-  """
   lines_overlaps = count_overlapes(diagrame)
 
   return lines_overlaps
@@ -96,6 +92,7 @@ def main():
     segments, hx, hy = extract_segments(raw_data)
 
     dangerours_points = determine_lines_overlapes(segments, hx, hy)
+    print(f'Dangerous points: {dangerours_points}')
 
 if __name__ == '__main__':
   main()
