@@ -8,10 +8,10 @@ class Test_Case(unittest.TestCase):
 
       self.assertEqual(fido, [3,4,3,1,2])
 
-      grow_in_day = calc_fish_grow_per_day(fido)
+      grow_after_day = calc_fish_grow_per_day(fido)
 
-      self.assertEqual(grow_in_day[18], 26)
-      self.assertEqual(grow_in_day[80], 5934)
+      self.assertEqual(grow_after_day[18], 26)
+      self.assertEqual(grow_after_day[80], 5934)
 
       grow_in_day = calc_fish_grow_per_day(fido, limit=256)
       self.assertEqual(grow_in_day[256], 26984457539)
