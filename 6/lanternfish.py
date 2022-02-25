@@ -19,7 +19,7 @@ def calc_fish_grow_per_day(fishes_in_day_one, limit=80):
   total_fishes_per_day.append(c)
 
   for day in range(limit):
-    print(f'day {day}')
+    #print(f'day {day}')
     new_borns = 0
     for i, group in enumerate(grow_in_day):
       if i == 0:
