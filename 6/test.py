@@ -13,5 +13,8 @@ class Test_Case(unittest.TestCase):
       self.assertEqual(grow_in_day[18], 26)
       self.assertEqual(grow_in_day[80], 5934)
 
+      grow_in_day = calc_fish_grow_per_day(fido, limit=256)
+      self.assertEqual(grow_in_day[256], 26984457539)
+
 if __name__ == '__main__':
   unittest.main()

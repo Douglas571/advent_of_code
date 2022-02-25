@@ -6,6 +6,7 @@ def calc_fish_grow_per_day(fishes_in_day_one, limit=80):
   grow_in_day = [fishes_in_day_one.copy(),]
 
   for _ in range(limit):
+    print(_)
     new_day = []
     new_fishes = 0
 
