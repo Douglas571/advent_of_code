@@ -3,6 +3,8 @@ def extract_segments(raw_data):
   hx = 0
   hy = 0
   for line in raw_data:
+    if len(line.strip()) == 0: continue
+
     raw_p1, raw_p2 = line.split(' -> ')
 
     p1 = tuple(int(n) for n in raw_p1.split(','))
@@ -36,6 +38,7 @@ def print_d(diagrame):
     ..........
     222111....
   """
+  print()
   for row in diagrame:
     for n in row:
       if n == 0: 
@@ -64,7 +67,7 @@ def determine_lines_overlapes(segments, hx, hy):
     y1 = p1[1]
     y2 = p2[1]
 
-    if x1 is x2:
+    if x1 == x2:
       #print('vertical')
       start = min([y1, y2])
       end = max([y1, y2]) + 1
@@ -73,7 +76,7 @@ def determine_lines_overlapes(segments, hx, hy):
         diagrame[y][x1] += 1
       continue
 
-    if y1 is y2:
+    if y1 == y2:
       #print('horizontal')
       start = min([x1, x2])
       end = max([x1, x2]) + 1
@@ -82,6 +85,7 @@ def determine_lines_overlapes(segments, hx, hy):
         diagrame[y1][x] += 1
       continue
 
+  #print_d(diagrame)
   lines_overlaps = count_overlapes(diagrame)
 
   return lines_overlaps
