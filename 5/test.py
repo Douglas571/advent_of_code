@@ -20,6 +20,7 @@ class Test(unittest.TestCase):
       dangerours_points = determine_lines_overlapes(segments, hx, hy)
       self.assertEqual(dangerours_points, 5)
 
+  @unittest.skip
   def test_two(self):
     with open('example2.txt') as f:
       raw_data = f.readlines()
@@ -27,6 +28,14 @@ class Test(unittest.TestCase):
 
       dangerours_points = determine_lines_overlapes(segments, hx, hy)
       self.assertEqual(dangerours_points, 10)      
+
+  def test_diagonal(self):
+    with open('example.txt') as f:
+      raw_data = f.readlines()
+      segments, hx, hy = extract_segments(raw_data)
+
+      dangerours_points = determine_lines_overlapes(segments, hx, hy, diagonal=True)
+      self.assertEqual(dangerours_points, 12)      
 
 if __name__ == '__main__':
   unittest.main()

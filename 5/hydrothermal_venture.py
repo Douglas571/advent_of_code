@@ -55,37 +55,53 @@ def count_overlapes(diagrame):
 
   return c
 
-def determine_lines_overlapes(segments, hx, hy):
+def horizontal_line(dgrm, x, y1, y2):
+  start = min(y1, y2)
+  end = max(y1, y2) + 1
+  
+  for y in range(start, end):
+    dgrm[y][x] += 1
+
+def vertical_line(dgrm, y, x1, x2):
+  start = min(x1, x2)
+  end = max(x1, x2) + 1
+  
+  for x in range(start, end):
+    dgrm[y][x] += 1
+
+def diagonal_line(dgrm, x1, x2, y1, y2):
+  distance = abs(x1 - x2)
+
+  if y1 < y2: v = 1 
+  else: v = -1
+
+  if x1 < x2: h = 1 
+  else: h = -1
+
+  for _ in range(distance + 1):
+    dgrm[y1][x1] += 1
+    y1 += v
+    x1 += h
+
+def determine_lines_overlapes(segments, hx, hy, diagonal=False):
   diagrame = [[ 0 for _ in range(hx + 1)] for _ in range(hy + 1)]
   lines_overlaps = -1
 
   # a sgm is a list like this: ((x1, y1), (x2, y2))
   for sgm in segments:
-    p1, p2 = sgm
-    x1 = p1[0]
-    x2 = p2[0]
-    y1 = p1[1]
-    y2 = p2[1]
+    (x1, y1), (x2, y2) = sgm
 
     if x1 == x2:
-      #print('vertical')
-      start = min([y1, y2])
-      end = max([y1, y2]) + 1
-      
-      for y in range(start, end):
-        diagrame[y][x1] += 1
+      horizontal_line(diagrame, x1, y1, y2)
       continue
 
     if y1 == y2:
-      #print('horizontal')
-      start = min([x1, x2])
-      end = max([x1, x2]) + 1
-      
-      for x in range(start, end):
-        diagrame[y1][x] += 1
+      vertical_line(diagrame, y1, x1, x2)
       continue
 
-  #print_d(diagrame)
+    if diagonal:
+      diagonal_line(diagrame, x1, x2, y1, y2)
+
   lines_overlaps = count_overlapes(diagrame)
 
   return lines_overlaps
@@ -95,8 +111,15 @@ def main():
     raw_data = f.readlines()
     segments, hx, hy = extract_segments(raw_data)
 
+    print('--- Hydrothermal Venture ---')
+
+    print('1th part:')
     dangerours_points = determine_lines_overlapes(segments, hx, hy)
     print(f'Dangerous points: {dangerours_points}')
+
+    print('2th part:')
+    dangerours_points = determine_lines_overlapes(segments, hx, hy, diagonal=True)
+    print(f'Dangerous points (with diagonal): {dangerours_points}')
 
 if __name__ == '__main__':
   main()
