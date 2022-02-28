@@ -1,60 +1,76 @@
 from collections import Counter
 
-def get_horizontal_pos(raw_lines):
+def get_crabs_groups(raw_lines):
+  crabs_groups = Counter()
   hp = [int(n) for n in raw_lines[0].split(',')]
-  return hp
-
-def get_cheapest_route(consuptions):
-  cheapest = {
-    'fuel': 0,
-    'position': 0
-  }
-
-  for i, p in enumerate(consuptions):
-    fuel = 0
-    for crab in p:
-      fuel += crab['fuel']
-
-    print(f'fuel in {i} is: {fuel}')
-
-    v = (fuel < cheapest['fuel'])
-    print(f'fuel < cheapest["fuel"]: {v}')
-    if v:
-      print('here')
-      cheapest['fuel'] = fuel
-      cheapest['position'] = i
-
-  print(cheapest)
-  return cheapest['position'], cheapest['fuel']
-
-def calc_cheapest_position(hp):
-  total_pos = Counter()
-  position = None
-  fuel = None
-
-  posible_pos = []
 
   for p in hp:
-    total_pos[p] += 1
+    crabs_groups[str(p)] += 1
 
-  largest = max([ int(n) for n, _ in total_pos.items()])
+  return crabs_groups
 
-  consuption = []
-  for i in range(largest):
-    con = []
-    for k, v in total_pos.items():
-      fuel_consumed = abs(i-v)
-      print(f'{k}:{v}')
-      con.append({
-        "start": int(k),
-        "end": i,
-        "fuel": fuel_consumed
-      })
-    consuption.append(con)
+def calc_cheapest_position(crabs_groups, two=False):  
+  better_p = [0, 0]
 
-  print(total_pos)
-  print(consuption[0])
+  positions = []
 
-  position, fule = get_cheapest_route(consuption)
+  total = [ int(p) for p, _ in crabs_groups.items()]
+  start = min(total)
+  end = max(total) + 1
+  for position in range(start, end):
+    print(position)
+    movements = {
+      'total_fuel': 0,
+      'moves': []
+    }
 
-  return position, fuel
+    for p, c in crabs_groups.items():
+      move = {}
+
+      move['start'] = int(p)
+
+      if two:
+        fuel = 0
+        steps = abs(int(p) - position)
+        for i in range(1, steps + 1):
+          fuel += i
+        move['fuel'] = fuel * c
+
+      else:
+        move['fuel'] = abs(int(p) - position) * c
+
+
+
+      movements['moves'].append(move)
+      movements['total_fuel'] += move['fuel']
+
+    positions.append(movements)
+
+  better_p[1] = positions[0]['total_fuel']
+  for p, movements in enumerate(positions):
+    fuel = movements['total_fuel']
+
+    tf = movements['total_fuel']
+    #print(f'{p}.{tf}')
+    if fuel < better_p[1]:
+      better_p = (p, fuel)
+  
+  return better_p
+  #wrogn = 336721
+
+def main():
+  with open('input.txt') as f:
+    print('--- The Treachery of Whales ---')
+    print('1th part:')
+
+    cgs = get_crabs_groups(f.readlines())
+    p, f = calc_cheapest_position(cgs)
+
+    print(f'The cheapest position is: {p} with {f} fuel consumed.')
+
+    print('2th part:')
+    p, f = calc_cheapest_position(cgs, two=True)
+    print(f'The cheapest position is: {p} with {f} fuel consumed.')
+
+if __name__ == '__main__':
+  main()
