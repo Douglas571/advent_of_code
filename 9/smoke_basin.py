@@ -84,41 +84,29 @@ def get_1th_solution(raw_lines):
 
 def get_basins(m, i, j, checked_points=[]):
   points = []
-  checked_points = checked_points.copy()
+  center = m[i][j]
+
+  # directions
+  UP    = (i-1, j)
+  DOWN  = (i+1, j)
+  RIGTH = (i, j+1)
+  LEFT  = (i, j-1)
 
   if len(checked_points) == 0:
     checked_points = [[0 for col in range(len(m[0]))] for row in range(len(m))]
 
-  center = m[i][j]
+  checked_points = checked_points.copy()
 
-  # directions
-  up    = (i-1, j)
-  down  = (i+1, j)
-  rigth = (i, j+1)
-  left  = (i, j-1)
-
-  # iterar sobre los border
-  #print(f'new iter: {i},{j} = {center}')
   points.append(center)
   checked_points[i][j] = 1
-  for r,c in [up,rigth,down,left]:
-    #print(f'point ({r},{c})')
+  for r,c in [UP,RIGTH,DOWN,LEFT]:
     if (r >= 0 and r < len(m)) and (c >= 0 and c < len(m[r])):
       new_p = m[r][c]
 
-      if checked_points[r][c] or new_p == 9: 
-        #print(f'ckecked: {r},{c} = {m[r][c]}')
-        continue
-
-      diff = abs(center - new_p)
-      # if diff == 1:
-      #print(f'new_p={new_p}')
+      if checked_points[r][c] or new_p == 9:  continue
 
       sub_basins, checked_points = get_basins(m,r,c, checked_points)
       points.extend(sub_basins)
-      #checked_points.append((r, c))
-    # else:
-        # print(f'invalid: r={r},c={c}')
 
   return points, checked_points
 
