@@ -83,9 +83,15 @@ def get_1th_solution(raw_lines):
   return sum_rlvs
 
 def get_basins(m, i, j, checked_points=[]):
-  basins = []
+  points = []
   checked_points = checked_points.copy()
+
+  if len(checked_points) == 0:
+    checked_points = [[0 for col in range(len(m[0]))] for row in range(len(m))]
+
   center = m[i][j]
+
+  # directions
   up    = (i-1, j)
   down  = (i+1, j)
   rigth = (i, j+1)
@@ -93,30 +99,31 @@ def get_basins(m, i, j, checked_points=[]):
 
   # iterar sobre los border
   #print(f'new iter: {i},{j} = {center}')
-  basins.append(center)
-  checked_points.append((i,j))
+  points.append(center)
+  checked_points[i][j] = 1
   for r,c in [up,rigth,down,left]:
     #print(f'point ({r},{c})')
     if (r >= 0 and r < len(m)) and (c >= 0 and c < len(m[r])):
-      
-      if (r, c) in checked_points: 
+      new_p = m[r][c]
+
+      if checked_points[r][c] or new_p == 9: 
         #print(f'ckecked: {r},{c} = {m[r][c]}')
         continue
 
-      new_p = m[r][c]
       diff = abs(center - new_p)
-      if diff == 1 and new_p != 9:
-        #print(f'new_p={new_p}')
+      # if diff == 1:
+      #print(f'new_p={new_p}')
 
-        sub_basins, checked_points = get_basins(m,r,c, checked_points)
-        basins.extend(sub_basins)
+      sub_basins, checked_points = get_basins(m,r,c, checked_points)
+      points.extend(sub_basins)
       #checked_points.append((r, c))
     # else:
         # print(f'invalid: r={r},c={c}')
 
-  return basins, checked_points
+  return points, checked_points
 
 def get_2th_solution(raw_lines):
+  checked_points = []
   lowest_points = []
   all_basins = []
   m = get_floor_map(raw_lines)
@@ -129,6 +136,8 @@ def get_2th_solution(raw_lines):
   for i, j, n in lowest_points:
     print(f'\nNEW low point: i={i}, j={j}, n={n}')
     basin, _ = get_basins(m, i, j)
+    #for x in _: print(x)
+
     print(f'FINAL basins of i={i}, j={j}, n={n}, len={len(basin)}\n\t{basin}')
     all_basins.append(len(basin))
 
@@ -136,15 +145,11 @@ def get_2th_solution(raw_lines):
   #print(lowest_points)
 
   solution = 1
-  c = 0
-  LIST = list(reversed(sorted(all_basins)))
-  print(LIST)
-  for b in LIST:
-    if c == 3: break
+  all_basins = list(reversed(sorted(all_basins)))
+  for b in all_basins[0:3]:
 
     print(f'b={b}')
     solution *= b
-    c += 1
 
   #print(solution)
 
