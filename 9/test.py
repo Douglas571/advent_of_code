@@ -2,7 +2,7 @@ import unittest
 from smoke_basin import *
 
 class Test_Case(unittest.TestCase):
-  @unittest.skip
+  #@unittest.skip
   def test_one(self):
     with open('example.txt') as f:
       raw_lines = f.readlines()
@@ -11,16 +11,13 @@ class Test_Case(unittest.TestCase):
       self.assertEqual(fm[-1], [9,8,9,9,9,6,5,6,7,8])
 
       lwps = get_lowest_points(fm)
-      print(f'lwps={lwps}')
       self.assertEqual(lwps, [1, 0, 5, 5])
 
       rlvs = get_risk_levels(lwps)
-      print(f'rlvs={rlvs}')
       self.assertEqual(rlvs, [2, 1, 6, 6])
 
       sum_rlvs = sum(rlvs)
       self.assertEqual(sum_rlvs, 15)
-      print(f'sum_rlvs={sum_rlvs}')
 
       solution = get_1th_solution(raw_lines)
       self.assertEqual(solution, 15)
@@ -28,9 +25,9 @@ class Test_Case(unittest.TestCase):
   def test_two(self):
     with open('example.txt') as f:
       raw_lines = f.readlines()      
-
-      # end solution
+      
       solution = get_2th_solution(raw_lines)
       self.assertEqual(solution, 1134)
+
 if __name__ == '__main__':
   unittest.main()

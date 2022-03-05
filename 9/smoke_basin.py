@@ -93,12 +93,12 @@ def get_basins(m, i, j, checked_points=[]):
   LEFT  = (i, j-1)
 
   if len(checked_points) == 0:
-    checked_points = [[0 for col in range(len(m[0]))] for row in range(len(m))]
+    checked_points = [[False for col in range(len(m[0]))] for row in range(len(m))]
 
   checked_points = checked_points.copy()
 
   points.append(center)
-  checked_points[i][j] = 1
+  checked_points[i][j] = True
   for r,c in [UP,RIGTH,DOWN,LEFT]:
     if (r >= 0 and r < len(m)) and (c >= 0 and c < len(m[r])):
       new_p = m[r][c]
@@ -122,24 +122,12 @@ def get_2th_solution(raw_lines):
         lowest_points.append((i, j, m[i][j]))
 
   for i, j, n in lowest_points:
-    print(f'\nNEW low point: i={i}, j={j}, n={n}')
     basin, _ = get_basins(m, i, j)
-    #for x in _: print(x)
-
-    print(f'FINAL basins of i={i}, j={j}, n={n}, len={len(basin)}\n\t{basin}')
     all_basins.append(len(basin))
-
-  print(f'all_basins={all_basins}')
-  #print(lowest_points)
 
   solution = 1
   all_basins = list(reversed(sorted(all_basins)))
-  for b in all_basins[0:3]:
-
-    print(f'b={b}')
-    solution *= b
-
-  #print(solution)
+  for b in all_basins[0:3]: solution *= b
 
   return solution
   # You guessed 712800, is to low.
