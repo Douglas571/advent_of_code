@@ -1,5 +1,5 @@
 import unittest
-from smoke_basin import *
+from syntax_scoring import *
 
 class Test_Case(unittest.TestCase):
   #@unittest.skip
@@ -7,7 +7,16 @@ class Test_Case(unittest.TestCase):
     with open('example.txt') as f:
       raw_lines = f.readlines()
 
-      
+      exp_errors = {
+        ")": 2,
+        "]": 1,
+        "}": 1,
+        ">": 1
+      }
+
+      lines = get_input(raw_lines)
+      errors_found = check(lines)
+      self.assertEqual(errors_found, exp_errors)
 
       # End part:
       solution = get_1th_solution(raw_lines)
