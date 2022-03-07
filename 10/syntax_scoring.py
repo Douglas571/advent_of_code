@@ -35,40 +35,32 @@ def get_input(raw_lines):
   input_data = [ ln.strip('\n') for ln in raw_lines ]
   return input_data
 
-def check_ln(ln, char=None, rest=None):
-  if not rest:
-    rest = []
-
-  # print(f'init checking')
+def check_ln(ln, char=None, payload=None):
+  payload = payload or []
   char = char or ln.popleft()
-  # print(f'  char={char}')
 
   if len(ln) == 0: 
-    # print('thers no more chars! incompleted')
-    rest.append(OPSIDE[char])
-    return States.INCOMPLETED, rest
+    payload.append(OPSIDE[char])
+    return States.INCOMPLETED, payload
   
-
   next_char = ln.popleft()
-  # print(f'  next_char={next_char}')
-  # print(ln)
 
   if next_char == OPSIDE[char]:
-    # print(f'block: {char}...{next_char}')
     return States.GOOD, None
 
-  if next_char in OPSIDE.keys():
-    state, rest = check_ln(ln, next_char, rest)
-    if state == States.INCOMPLETED:
-      rest.append(OPSIDE[char])
-      return state, rest
+  if not next_char in OPSIDE.keys():
+    return States.CORRUPTED, next_char
 
-    if state == States.GOOD:      
-      return check_ln(ln, char, rest)
+  sub_state, payload = check_ln(ln, next_char, payload)
 
-    return state, rest
+  if sub_state == States.INCOMPLETED:
+    payload.append(OPSIDE[char])
+    return States.INCOMPLETED, payload
 
-  return States.CORRUPTED, next_char
+  if sub_state == States.CORRUPTED:
+    return States.CORRUPTED, payload
+  
+  return check_ln(ln, char, payload)  
 
 def check(lines):
   corrupted_lines = []
