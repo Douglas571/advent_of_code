@@ -10,33 +10,44 @@ OPSIDE = {
   "<": ">" 
 }
 
-def analise(char, line):
+def analise(char, line, rest=[]):
   # print(f'line={line}')
+
+  rest = rest.copy()
 
   next_char = '\n'
   if len(line) > 0:
     next_char = line.popleft()
     
 
-  # print(f'char={char}, next_char={next_char}')
+  #print(f'char={char}, next_char={next_char}')
   if OPSIDE[char] == next_char:
     # print(f'block={char}...{next_char}')
-    return None, line
+    return None, line, rest
 
   if next_char in OPSIDE.keys():
-    # print('into')
-    err, line = analise(next_char, line)
-    # print(f'out: char={char},err={err}')
+    #print('into')
+    err, line, rest = analise(next_char, line, rest)
+    #print(f'out: char={char},err={err}, rest={rest}')
+
+    if len(rest) > 0:
+      rest.append(OPSIDE[char])
 
     if err:
-      return err, line
+      return err, line, rest
 
-    return analise(char, line)
+    #print('reanalize')
+    return analise(char, line, rest)
+
+  rest.append(OPSIDE[char])
+  #print(f'rest={rest}')
 
   err = next_char
-  return err, line
+  return err, line, rest
 
 def check(lines):
+  print('\n--- checking ---')
+  completations = []
   errors_found = {
     ")": 0,
     "]": 0,
@@ -45,13 +56,26 @@ def check(lines):
   }
 
   for ln in lines:
+    print('iter')
+    print(', '.join(ln))
     char = ln.popleft()
-    err, _ = analise(char, ln)
-    if err and err != '\n':
-      # print(f'SYNTAX ERROR: {err}')
-      errors_found[err] += 1
+    err, _, rest = analise(char, ln)
+    print(f'err={err}')
 
-  return errors_found
+    if err:
+      if err != '\n':
+        # print(f'SYNTAX ERROR: {err}')
+        print('corrupta')
+        errors_found[err] += 1
+        continue
+      
+      print(f'FINAL: rest = {rest}')
+      completations.append(rest)
+
+      
+    
+
+  return errors_found, completations
 
 SCORES = {
   ")": 3,
@@ -64,12 +88,35 @@ def get_1th_solution(raw_lines):
   score = 0
   lines = get_input(raw_lines)
   # corrupted_lines = get_corrupted_lines(raw_lines)
-  errors_found = check(lines)
+  errors_found, _ = check(lines)
 
   for char, count in errors_found.items():
     score += SCORES[char] * count
 
   return score
 
+FIX_SCORES = {
+  ")": 1,
+  "]": 2,
+  "}": 3,
+  ">": 4
+}
+
 def get_2th_solution(raw_lines):
-  pass
+  solution = 0
+
+  lines = get_input(raw_lines)
+  _, completations = check(lines)
+
+  scores = []
+  for compl in completations:
+    scr = 0
+    for char in compl:
+      scr *= 5
+      scr += FIX_SCORES[char]
+    scores.append(scr)
+
+  print(sorted(scores))
+
+
+  return solution
