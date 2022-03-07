@@ -43,7 +43,7 @@ def get_2th_solution(raw_lines):
 """)
 
 test_file = ('test.py', f"""import unittest
-from smoke_basin import *
+from {lib_name} import *
 
 class Test_Case(unittest.TestCase):
   #@unittest.skip
@@ -65,8 +65,20 @@ class Test_Case(unittest.TestCase):
 if __name__ == '__main__':
   unittest.main()""")
 
-files = [main_file, lib_file, test_file]
+files = [
+  main_file, 
+  lib_file, 
+  test_file, 
+  ('input.txt', None), 
+  ('example.txt', None), 
+  ('puzzle.txt', None)]
+
+folder = f'{cwd}/{day}'
+
+if not os.path.exists(folder):
+  os.mkdir(folder)
 
 for name, content in files:
-  with open(f'{cwd}/{day}/{name}', 'w') as f:
-    f.write(content)
+  with open(f'{folder}/{name}', 'w') as f:
+    if content:
+      f.write(content)
