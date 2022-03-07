@@ -17,7 +17,7 @@ class Test_Case(unittest.TestCase):
       }
 
       lines = get_input(raw_lines)
-      errors_found, _ = check(lines)
+      _, errors_found, _, _ = check(lines)
       self.assertEqual(errors_found, exp_errors)
 
       # End part:
