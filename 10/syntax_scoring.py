@@ -22,15 +22,15 @@ def analise(char, line, rest=[]):
     next_char = line.popleft()
     
 
-  #print(f'char={char}, next_char={next_char}')
+  # print(f'char={char}, next_char={next_char}')
   if OPSIDE[char] == next_char:
     # print(f'block={char}...{next_char}')
     return None, line, rest
 
   if next_char in OPSIDE.keys():
-    #print('into')
+    # print('into')
     err, line, rest = analise(next_char, line, rest)
-    #print(f'out: char={char},err={err}, rest={rest}')
+    # print(f'out: char={char},err={err}, rest={rest}')
 
     if len(rest) > 0:
       rest.append(OPSIDE[char])
@@ -38,11 +38,11 @@ def analise(char, line, rest=[]):
     if err:
       return err, line, rest
 
-    #print('reanalize')
+    # print('reanalize')
     return analise(char, line, rest)
 
   rest.append(OPSIDE[char])
-  #print(f'rest={rest}')
+  # print(f'rest={rest}')
 
   err = next_char
   return err, line, rest
@@ -58,7 +58,7 @@ def check(lines):
   }
 
   for ln in lines:
-    #print('iter')
+    # print('iter')
     # print(', '.join(ln))
     char = ln.popleft()
     err, _, rest = analise(char, ln)
@@ -119,22 +119,22 @@ def check_ln(ln, char=None, rest=None):
   if not rest:
     rest = []
 
-  print(f'init checking')
+  # print(f'init checking')
   char = char or ln.popleft()
-  print(f'  char={char}')
+  # print(f'  char={char}')
 
   if len(ln) == 0: 
-    print('thers no more chars! incompleted')
+    # print('thers no more chars! incompleted')
     rest.append(OPSIDE[char])
     return States.INCOMPLETED, rest
   
 
   next_char = ln.popleft()
-  print(f'  next_char={next_char}')
-  print(ln)
+  # print(f'  next_char={next_char}')
+  # print(ln)
 
   if next_char == OPSIDE[char]:
-    print(f'block: {char}...{next_char}')
+    # print(f'block: {char}...{next_char}')
     return States.GOOD, None
 
   if next_char in OPSIDE.keys():
@@ -167,7 +167,7 @@ def check_ln_2(ln):
 """
 
 def get_incompleted_lines(lines):
-  print('--- get_incompleted_lines() ---')
+  # print('--- get_incompleted_lines() ---')
   incompleted_lines = []
   complements = []
   
@@ -176,25 +176,25 @@ def get_incompleted_lines(lines):
 
     state, rest = check_ln(ln_copy)
     while state == States.GOOD and len(ln_copy) > 0:
-      print('REPEAT')
+      # print('REPEAT')
       state, rest = check_ln(ln_copy)
 
     if state == States.INCOMPLETED:
-      print(f'{i}.INCOMPLETED line:')
-      print(f'  {ln}')
-      print(f'  rest={rest}')
+      # print(f'{i}.INCOMPLETED line:')
+      # print(f'  {ln}')
+      # print(f'  rest={rest}')
 
       incompleted_lines.append(ln)
       rest = str().join(rest)
       complements.append(rest)
       continue
 
-    print(f'{i}.CORUPTED line:')
-    print(f'  {ln}')
+    # print(f'{i}.CORUPTED line:')
+    # print(f'  {ln}')
 
 
   
-  print(f'incompleted lines={len(incompleted_lines)}')
+  # print(f'incompleted lines={len(incompleted_lines)}')
   return incompleted_lines, complements
 
 def fix_line(line):
@@ -209,7 +209,7 @@ def get_2th_solution(raw_lines):
   lines = get_input_2(raw_lines)
   incompleted_lines, complements = get_incompleted_lines(lines)
 
-  print(complements)
+  # print(complements)
   scores = []
 
   for compl in complements:
@@ -221,7 +221,7 @@ def get_2th_solution(raw_lines):
     scores.append(scr)
 
   scores = sorted(scores)
-  print(scores)
+  # print(scores)
   middle = math.floor(len(scores) / 2)
   solution = scores[middle]
   return solution
