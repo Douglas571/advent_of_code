@@ -8,7 +8,7 @@ class Test_Case(unittest.TestCase):
       raw_lines = f.readlines()
 
       solution = get_1th_solution(raw_lines)
-      # self.assertEqual(solution, 0000)
+      self.assertEqual(solution, 1656)
 
   #@unittest.skip
   def test_two(self):
