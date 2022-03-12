@@ -1,5 +1,23 @@
 from collections import deque
 
+# Constants...
+def get_directions(i, j):
+  up = (i-1, j)
+  down = (i+1, j)
+  rigth = (i, j+1)
+  left = (i, j-1)
+  left_up = (i-1, j-1)
+  left_down = (i+1, j-1)
+  rigth_up = (i-1, j+1)
+  rigth_down = (i+1, j+1)
+
+  directions = (
+    up, rigth_up, rigth, rigth_down, 
+    down, left_down, left, left_up
+  )
+
+  return directions
+
 def get_input(raw_lines):
   f = ' '
   m = []
@@ -22,6 +40,9 @@ def print_m(m, msg=None):
 
   for r in m:
     for n in r:
+      if n == 0:
+        print('.', end=' ')
+        continue
       print(n, end=' ')
     print()
 
@@ -29,72 +50,75 @@ def m_copy(m):
   return [ l.copy() for l in m ]
 
 def run_step(M):
-  flashes = 0
   m = m_copy(M)
-  next_m = m_copy(m)
+  flashed = [[None]*len(r) for r in m]
+  flashes = 0
 
-  to_flash = deque()
+  for i, row in enumerate(M):
+    for j, el in enumerate(row):
+      if el == ' ': continue
+      m[i][j] += 1
 
-  for i, l in enumerate(m):
-    for j, n in enumerate(l):
-      if next_m[i][j] == ' ': continue
+  # print('before eny flash:')
+  # print_m(m)
 
-      next_m[i][j] += 1
+  keep_run = True
+  while keep_run:
+    keep_run = False
+    for r, row in enumerate(m):
+      for c, el in enumerate(row):
+        if el == ' ': continue
 
-      if next_m[i][j] >= 9:
-        to_flash.append((i, j))
+        if m[r][c] > 9:
+          flashed[r][c] = True
+          flashes += 1
+          keep_run = True
 
-  to_flash_2 = deque()
+          directions = get_directions(r, c)
+          for i, j in directions:
+            if m[i][j] == ' ': continue
+            m[i][j] += 1
+        
+        if flashed[r][c]:
+          m[r][c] = 0        
 
-  while len(to_flash) > 0:
-    i, j = to_flash.popleft()
-    next_m[i][j] = 0
-
-    if next_m[i -1][j] != ' ':
-      next_m[i -1][j] += 1
-
-
-    if next_m[i -1][j -1] != ' ':
-      next_m[i -1][j -1] += 1
-
-    if next_m[i][j -1] != ' ':
-      next_m[i][j -1] += 1
-
-    if next_m[i +1][j -1] != ' ':
-      next_m[i +1][j -1] += 1
-
-    if next_m[i +1][j] != ' ':
-      next_m[i +1][j] += 1
-
-    if next_m[i +1][j +1] != ' ':
-      next_m[i +1][j +1] += 1
-
-    if next_m[i][j +1] != ' ':
-      next_m[i][j +1] += 1
-
-
-  for i, l in enumerate(m):
-    for j, n in enumerate(l):
-      if next_m[i][j] != ' ':
-        next_m[i][j] += 1  
-
-  print_m(next_m, 'bucle i')
-
-  return flashes, next_m
+  return m, flashes
 
 def get_1th_solution(raw_lines):
   steps = 100
   solution = 0
   m = get_input(raw_lines)
-  print_m(m, '1th iter')
+  # print_m(m, '1th iter')
 
   flashes = 0
-  for s in range(100):
-    f, m = run_step(m)
+  for stp in range(steps):
+    m, f = run_step(m)
     flashes += f
+    # print(f'after step {(stp+1)}: {f} flashes')
+    # print_m(m)
 
-  print(f)
+  solution = flashes
   return solution
 
 def get_2th_solution(raw_lines):
-  pass
+  solution = 0
+  m = get_input(raw_lines)
+  step = 0
+
+  while solution == 0:
+    total = 0
+    step += 1
+    m, f = run_step(m)
+
+    for row in m:
+      for n in row:
+        if n != ' ': total += n
+
+    if total == 0:
+      solution = step
+      break
+
+    # print(f'after step {(stp+1)}: {f} flashes')
+    # print_m(m)
+
+  return solution  
