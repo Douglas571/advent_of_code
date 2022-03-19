@@ -64,31 +64,6 @@ repetir el segundo
 def is_big_cave(c):
   return c.isupper()
 
-def can_visite_cave(n, path):
-  if n == 'start':
-    return False
-
-  if is_big_cave(n):
-    return True
-
-  # is small cave...
-
-  counter = Counter()
-  for p in path:
-    if not is_big_cave(p):
-      counter[p] += 1
-    
-  alredy_visited_small_cave_twice = False
-  for cave, times in counter.items():
-    if times == 2:
-      alredy_visited_small_cave_twice = True
-
-  if alredy_visited_small_cave_twice and counter[n] > 0:
-      # print(f'n={n} visited one or twe times, path={path}')
-      return False
-
-  return True
-
 def find_paths(g, start, end, path=[]):
   path = path + [start]
 
@@ -106,19 +81,46 @@ def find_paths(g, start, end, path=[]):
 
   return paths
 
-def find_paths_2(g, start, end, path=[]):
+def can_visite_cave(n, path, counter, visited_twice):
+  if is_big_cave(n):
+    return True
+
+  # is small cave...
+  if n == 'start': return False
+
+  if visited_twice and counter[n] > 0: return False
+
+  return True
+
+def clone_counter(c):
+  new_counter = Counter()
+
+  for k, v in c.items():
+    new_counter[k] = v
+
+  return new_counter
+  
+def find_paths_2(g, start, end, path=[], counter=None, visited_twice=False):
+  if not counter:
+    counter = Counter()
+
   path = path + [start]
+  counter[start] += 1
+
+  if counter[start] == 2 and not is_big_cave(start):
+      visited_twice = True
 
   if start == end:
     return [path]
 
   paths = []
   for node in g[start]:
-    if not can_visite_cave(node, path):
-      # print(f'cut n={node}, path={path}')
+
+    if not can_visite_cave(node, path, counter, visited_twice):
+      # print(f'\ncut n={node}, path={path}\n  counter={counter}')
       continue
 
-    new_paths = find_paths_2(g, node, end, path)
+    new_paths = find_paths_2(g, node, end, path, clone_counter(counter), visited_twice)
 
     for new_path in new_paths:
       paths.append(new_path)

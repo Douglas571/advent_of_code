@@ -23,6 +23,7 @@ class Test_Case(unittest.TestCase):
       solution = get_2th_solution(raw_lines)
       self.assertEqual(solution, 36)
 
+  # @unittest.skip
   def test_three(self):
     with open('example2.txt') as f:
       raw_lines = f.readlines()
