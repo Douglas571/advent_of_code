@@ -7,6 +7,11 @@ class Test_Case(unittest.TestCase):
     with open('example.txt') as f:
       raw_lines = f.readlines()
 
+      g = get_input(raw_lines)
+      self.assertEqual(g['end'], ['A', 'b'])
+      self.assertEqual(g['d'], ['b'])
+      self.assertEqual(g['c'], ['A'])
+
       solution = get_1th_solution(raw_lines)
       self.assertEqual(solution, 10)
 
