@@ -1,6 +1,6 @@
 import re
 
-fold_re = re.compile(r'((?P<ax>\w)=(?P<amount>\d+?))')
+fold_re = re.compile(r'((?P<ax>\w)=(?P<amount>\d+))')
 
 def extract_fold(l):
   res = fold_re.search(l)
@@ -14,10 +14,7 @@ def get_input(raw_lines):
   gy = -1
   
   dots = []
-  folds = {
-    'x': set(),
-    'y': set()
-  }
+  folds = []
   c = 0
   for l in raw_lines:
     l = l.strip('\n')
@@ -26,7 +23,7 @@ def get_input(raw_lines):
     if l[0] == 'f':
       ax, amount = extract_fold(l)
       amount = int(amount)
-      folds[ax].add(amount)
+      folds.append((ax, amount))
 
       if c == 0:
         first_fold = (ax, amount)
@@ -62,6 +59,7 @@ def fold_y(m, y):
     j = -1 - i
     # print(f'i={i}, j={j}')
 
+    # print(f'i={i}, m={len(m)}')
     row_a = m[i]
     row_b = m[j]
     new_row = []
@@ -70,6 +68,7 @@ def fold_y(m, y):
 
     new_m.append(new_row)
 
+    # print(f'final m len={len(new_m)}')
   return new_m
 
 def print_m(m):
@@ -98,6 +97,7 @@ def get_1th_solution(raw_lines):
   dots, _, gx, gy, first_fold = get_input(raw_lines)
   m = get_paper(dots, gx, gy)
 
+  # print(first_fold)
   ax, i = first_fold
   if ax == 'y':
     m = fold_y(m, i)
@@ -113,16 +113,14 @@ def get_2th_solution(raw_lines):
   
   m = get_paper(dots, gx, gy)
 
-  for y in folds['y']:
-    # print(f'folding in y={y}')
-    m = fold_y(m, y)
-  
-  for x in folds['x']:
-    # print(f'folding in x={x}')
-    m = fold_x(m, x)
-
-  print_m(m)
+  for ax, i in folds:
+    if ax == 'y':
+      # print(f'folding in y={y}')
+      m = fold_y(m, i)
+    else:
+      # print(f'folding in x={x}')
+      m = fold_x(m, i)    
 
   total_dots = get_total_dots(m)
 
-  return total_dots
+  return total_dots, m
