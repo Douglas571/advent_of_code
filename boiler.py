@@ -14,7 +14,17 @@ solution_p = '{first_solution}'
 solution_2_p = '{second_solution}'
 
 lib_name = to_camel_case(name)
-main_file = ('__main__.py', f"""from {lib_name} import *
+main_file = ('__main__.py', f"""import time
+import math
+from {lib_name} import *
+
+def timeit(fn):
+  start = time.time()
+  res = fn()
+  end = time.time()
+  total_time = end - start
+
+  return res, total_time
 
 def main():
   with open('input.txt') as f:
@@ -22,14 +32,18 @@ def main():
 
     print('--- Day {day}: {name} ---')
 
-    first_solution = get_1th_solution(raw_lines)
-    print(f'1th part:\\n\\t"your message": {solution_p}')
+    ### first part ###
+    first_solution, t_time = timeit(lambda: get_1th_solution(raw_lines))
+    msg = 'your message'
+    print('1th part:\\n\\t%s: %s; in %4.2fsec'%(msg, first_solution, t_time))
 
-    second_solution = get_2th_solution(raw_lines)
-    print(f'2th part:\\n\\t"your message": {solution_2_p}')    
+    ### second part ###
+    second_solution, t_time = timeit(lambda: get_2th_solution(raw_lines))
+    msg = 'your message'
+    print('2th part:\\n\\t%s: %s; in %4.2fsec'%(msg, second_solution, t_time))    
 
 if __name__ == '__main__':
-main()
+  main()
 """)
 
 lib_file = (f'{lib_name}.py', f"""def get_input(raw_line):
