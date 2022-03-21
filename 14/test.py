@@ -10,13 +10,13 @@ class Test_Case(unittest.TestCase):
       solution = get_1th_solution(raw_lines)
       self.assertEqual(solution, 1588)
 
-  @unittest.skip
+  # @unittest.skip
   def test_two(self):
     with open('example.txt') as f:
       raw_lines = f.readlines()
 
-      # solution = get_2th_solution(raw_lines)
-      # self.assertEqual(solution, 0000)
+      solution = get_2th_solution(raw_lines)
+      self.assertEqual(solution, 2188189693529)
 
 if __name__ == '__main__':
   unittest.main()
