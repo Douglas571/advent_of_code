@@ -2,7 +2,7 @@ import unittest
 from extended_polymerization import *
 
 class Test_Case(unittest.TestCase):
-  #@unittest.skip
+  @unittest.skip
   def test_one(self):
     with open('example.txt') as f:
       raw_lines = f.readlines()
