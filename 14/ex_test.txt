@@ -1,0 +1,27 @@
+NN - NC, CN
+NCN - NB, BC; CC, CN -> NBCCN
+NBCCN - NB, BB; BB, BC; CN, NC; CC, CN
+NBBBCNCCB
+
+n = 3
+b = 4
+c = 3
+4 - 2 = 2
+
+
+CH -> B
+HH -> N
+CB -> H
+NH -> C
+HB -> C
+HC -> B
+HN -> C
+NN -> C
+BH -> H
+NC -> B
+NB -> B
+BN -> B
+BB -> N
+BC -> B
+CC -> N
+CN -> C

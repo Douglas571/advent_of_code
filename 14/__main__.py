@@ -18,13 +18,17 @@ def main():
 
     ### first part ###
     first_solution, t_time = timeit(lambda: get_1th_solution(raw_lines))
-    msg = 'your message'
-    print('1th part:\n\t%s: %s; in %4.2fsec'%(msg, first_solution, t_time))
+    first_solution = f'{first_solution:,}'
+    msg = 'In 10 iterations'
+    print('1th part:\n  %s: %s; in %4.2fsec'%(msg, first_solution, t_time))
+    print()
 
     ### second part ###
-    second_solution, t_time = timeit(lambda: get_2th_solution(raw_lines))
-    msg = 'your message'
-    print('2th part:\n\t%s: %s; in %4.2fsec'%(msg, second_solution, t_time))    
+    sec_solution, t_time = timeit(lambda: get_2th_solution(raw_lines))
+    sec_solution = f'{sec_solution:,}'
+    msg = 'In 40 iterations'
+    print('2th part:\n  %s: %s; in %4.2fsec'%(msg, sec_solution, t_time))    
+    print()
 
 if __name__ == '__main__':
   main()
