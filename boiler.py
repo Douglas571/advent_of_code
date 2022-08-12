@@ -2,6 +2,14 @@ import sys
 import json
 import os
 
+def timeit(fn):
+  start = time.time()
+  res = fn()
+  end = time.time()
+  total_time = end - start
+
+  return res, total_time
+
 day = sys.argv[1]
 name = sys.argv[2]
 cwd = os.getcwd()
@@ -10,8 +18,8 @@ def to_camel_case(name):
   s = name.lower().replace(' ', '_')
   return s
 
-solution_p = '{first_solution}'
-solution_2_p = '{second_solution}'
+solution_p = '{first_solution:,}'
+solution_2_p = '{second_solution:,}'
 
 lib_name = to_camel_case(name)
 main_file = ('__main__.py', f"""import time
@@ -34,16 +42,16 @@ def main():
 
     ### first part ###
     first_solution, t_time = timeit(lambda: get_1th_solution(raw_lines))
-    first_solution = f'{first_solution:,}'
+    first_solution = f'{solution_p}'
     msg = 'your message'
-    print('1th part:\n  %s: %s; in %4.2fsec'%(msg, first_solution, t_time))
+    print('1th part:\\n  %s: %s; in %4.2fsec'%(msg, first_solution, t_time))
     print()
 
     ### second part ###
     sec_solution, t_time = timeit(lambda: get_2th_solution(raw_lines))
-    sec_solution = f'{sec_solution:,}'
+    sec_solution = f'{solution_2_p}'
     msg = 'your message'
-    print('2th part:\n  %s: %s; in %4.2fsec'%(msg, sec_solution, t_time))    
+    print('2th part:\\n  %s: %s; in %4.2fsec'%(msg, sec_solution, t_time))    
     print()
 
 if __name__ == '__main__':
